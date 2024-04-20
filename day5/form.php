@@ -42,8 +42,8 @@ if (isset($_GET['errors']))
             </div>
 
             <div class="form-group">
-                <label for="roomnumber">Room Number</label>
-                <select class="form-control" id="roomnumber" name="roomnumber" required>
+                <label for="room_number">Room Number</label>
+                <select class="form-control" id="room_number" name="room_number" required>
                     <option value="application1">Application 1</option>
                     <option value="application2">Application 2</option>
                     <option value="cloud">Cloud</option>

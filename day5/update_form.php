@@ -1,19 +1,49 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <?php
 
+require_once  './db_connection.php';
+require_once  './db_info.php';
+require_once './db_class.php';
+
+$user_id = $_GET['id'];
+
 if (isset($_GET['errors']))
 {
     $errors = json_decode($_GET['errors']);
 }
 
+$old_data = [];
+
+if (isset($_GET['old_data']))
+{
+    $old_data = json_decode($_GET['old_data'], TRUE);
+}
+else
+{
+    try
+    {
+    $database = Database::getInstance();
+    
+    $old_data = $database->getUserById($_GET['id'])[0];
+    }
+    catch(PDOException $e)
+    {
+    echo $e->getMessage();
+    }
+}
+
 ?>
 <body>
     <div class="container">
-        <h2>Registration Form</h2>
-        <form method="POST" action="register.php" enctype="multipart/form-data">
+        <h2>Update Form</h2>
+        <form method="POST" 
+        action=<?php echo "update_user.php?id={$user_id}";?>
+        enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" name="name" >
+                <input type="text" class="form-control" id="name" name="name" 
+                value=<?php echo $old_data['name'] ?>
+                >
 
                 <p class='text-danger fw-bold '> 
                 <?php 
@@ -24,7 +54,9 @@ if (isset($_GET['errors']))
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="text" class="form-control" id="email" name="email" >
+                <input type="text" class="form-control" id="email" name="email"
+                value=<?php echo $old_data['email'] ?>
+                >
                 <p class="text-danger fw-bold ">
                     <?php 
                     echo $errors->email ? $errors -> email : "" ;
@@ -33,12 +65,9 @@ if (isset($_GET['errors']))
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" >
-            </div>
-
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" class="form-control" id="confirm_password" name="confirm_password" >
+                <input type="password" class="form-control" id="password" name="password"
+                value=<?php echo $old_data['password'] ?>
+                >
             </div>
 
             <div class="form-group">
@@ -55,7 +84,7 @@ if (isset($_GET['errors']))
                 <input type="file" class="form-control-file" id="image" name="image">
             </div>
 
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>
 
